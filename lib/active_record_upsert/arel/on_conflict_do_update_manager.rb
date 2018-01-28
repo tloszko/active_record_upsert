@@ -26,6 +26,15 @@ module Arel
       self
     end
 
+    def index_predicate= exprs
+      @ast.index_predicate = exprs
+    end
+
+    def index_predicate expr
+      @ast.index_predicate << expr
+      self
+    end
+
     def to_node
       @ast
     end

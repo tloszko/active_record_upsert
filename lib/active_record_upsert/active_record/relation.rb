@@ -1,7 +1,7 @@
 module ActiveRecordUpsert
   module ActiveRecord
     module RelationExtensions
-      def upsert(existing_attributes, upsert_attributes, wheres) # :nodoc:
+      def upsert(existing_attributes, upsert_attributes, wheres, index_predicate) # :nodoc:
         substitutes, binds = substitute_values(existing_attributes)
         upsert_keys = self.klass.upsert_keys || [primary_key]
 
@@ -13,6 +13,7 @@ module ActiveRecordUpsert
 
         on_conflict_do_update = arel_table.create_on_conflict_do_update
         on_conflict_do_update.target = arel_table[upsert_keys.join(',')]
+        on_conflict_do_update.index_predicate = index_predicate
         on_conflict_do_update.wheres = wheres
         on_conflict_do_update.set(vals_for_upsert)
 

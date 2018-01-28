@@ -14,6 +14,13 @@ module ActiveRecordUpsert
         def visit_Arel_Nodes_OnConflict o, collector
           collector << "ON CONFLICT "
           collector << " (#{quote_column_name o.target.name}) ".gsub(',', '","')
+
+          index_predicate = o.index_predicate
+          unless index_predicate.nil?
+            collector << " WHERE "
+            collector << index_predicate
+          end
+
           maybe_visit o.action, collector
         end
 
